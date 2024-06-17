@@ -102,7 +102,7 @@ const TicketChatPage = () => {
               {messages.map((message, index) => (
                 <ListItem key={index} style={{ textAlign: 'left' }}>
                   <ListItemText
-                    primary={message.text}
+                    primary={message.message}
                     secondary={message.timestamp}
                     style={{
                       maxWidth: '40%',
