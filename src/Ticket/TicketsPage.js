@@ -13,7 +13,7 @@ const TicketsPage = ({token}) => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [groupedTickets, setGroupedTickets] = useState({ open: [], unassigned: [], closed: [] });
+  const [groupedTickets, setGroupedTickets] = useState({ open: [], unassigned: [], closed: [], 'on hold':[] });
 
   const handleCreateTicket = (newTicket) => { 
     setGroupedTickets((prevGroupedTickets) => ({
@@ -48,6 +48,7 @@ const TicketsPage = ({token}) => {
           open: ticket.filter(t => t.status === 'OPEN'),
           unassigned: ticket.filter(t => t.status === 'UNASSIGNED'),
           closed: ticket.filter(t => t.status === 'CLOSED'),
+          ['on hold']: ticket.filter(t => t.status === 'ON HOLD'),
         };
         setGroupedTickets(grouped);
         console.log(grouped);
@@ -73,6 +74,7 @@ const TicketsPage = ({token}) => {
       const updatedTickets = {
         open: prevGroupedTickets.open.filter(ticket => ticket.id !== ticketId),
         unassigned: prevGroupedTickets.unassigned.filter(ticket => ticket.id !== ticketId),
+        ['on hold']: prevGroupedTickets['on hold'].filter(ticket => ticket.id !== ticketId),
         closed: prevGroupedTickets.closed.filter(ticket => ticket.id !== ticketId),
       };
       updatedTickets[newStatus.toLowerCase()] = [
@@ -113,7 +115,7 @@ const TicketsPage = ({token}) => {
 
   return (
     <>
-    <Container sx={{display: 'flex', flexDirection: 'column', alignItems: 'stretch' }} maxWidth="lg">
+    <Container maxWidth="lg">
       <Header/>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2 }}>
         <Typography variant="h4" style={{ marginBottom: '1em' }}>Tickets</Typography>
@@ -123,17 +125,18 @@ const TicketsPage = ({token}) => {
       </Box>
       <DragDropContext onDragEnd={handleDragEnd}>
         <TableContainer component={Paper}>
-          <Table>
+          <Table  style={{ tableLayout: 'fixed' }} >
             <TableHead>
               <TableRow>
                 <TableCell>OPEN</TableCell>
                 <TableCell>UNASSIGNED</TableCell>
+                <TableCell>ON HOLD</TableCell>
                 <TableCell>CLOSED</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               <TableRow>
-                <TableCell>
+                <TableCell style={{verticalAlign: 'top' }}>
                   <Droppable droppableId="OPEN">
                     {(provided) => (
                       <Box {...provided.droppableProps} ref={provided.innerRef}>
@@ -149,7 +152,7 @@ const TicketsPage = ({token}) => {
                     )}
                   </Droppable>
                 </TableCell>
-                <TableCell>
+                <TableCell style={{verticalAlign: 'top' }}>
                   <Droppable droppableId="UNASSIGNED">
                     {(provided) => (
                       <Box {...provided.droppableProps} ref={provided.innerRef}>
@@ -165,7 +168,23 @@ const TicketsPage = ({token}) => {
                     )}
                   </Droppable>
                 </TableCell>
-                <TableCell>
+                <TableCell style={{verticalAlign: 'top'}}>
+                  <Droppable droppableId="ON HOLD">
+                    {(provided) => (
+                      <Box {...provided.droppableProps} ref={provided.innerRef}>
+                        {groupedTickets['on hold'].map((ticket, index) => (
+                          <Draggable key={ticket.id.toString()} draggableId={ticket.id.toString()} index={index}>
+                            {(provided) => (
+                              <TicketCard key={ticket.id} ticket={ticket} onUpdateStatus={handleUpdateStatus} />
+                            )}
+                          </Draggable>
+                        ))}
+                        {provided.placeholder}
+                      </Box>
+                    )}
+                  </Droppable>
+                </TableCell>
+                <TableCell style={{verticalAlign: 'top'}}>
                   <Droppable droppableId="CLOSED">
                     {(provided) => (
                       <Box {...provided.droppableProps} ref={provided.innerRef}>

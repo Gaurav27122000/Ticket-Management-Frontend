@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Card, CardContent, Typography, Button, Menu, MenuItem, Box } from '@mui/material';
 import axios from 'axios';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Link } from 'react-router-dom';
 
 const TicketCard = ({ ticket, onUpdateStatus }) => {
   const [status, setStatus] = useState(ticket.status);
@@ -13,12 +14,6 @@ const TicketCard = ({ ticket, onUpdateStatus }) => {
 
   const handleClose = () => {
     setAnchorEl(null);
-  };
-
-  const handleMenuItemClick = (newStatus) => {
-    setStatus(newStatus);
-    setAnchorEl(null);
-    onUpdateStatus(ticket.id, newStatus);
   };
 
   const handleStatusChange = async (newStatus) => {
@@ -76,9 +71,13 @@ const TicketCard = ({ ticket, onUpdateStatus }) => {
           >
             <MenuItem onClick={() => handleStatusChange('OPEN')}>Open</MenuItem>
             <MenuItem onClick={() => handleStatusChange('UNASSIGNED')}>Unassigned</MenuItem>
+            <MenuItem onClick={() => handleStatusChange('ON HOLD')}>On Hold</MenuItem>
             <MenuItem onClick={() => handleStatusChange('CLOSED')}>Closed</MenuItem>
           </Menu>
         </Box>
+        <Button component={Link} to={`/chat/${ticket.id}`} variant="outlined" sx={{ mt: 2 }}>
+          View Chat
+        </Button>
       </CardContent>
     </Card>
   );
