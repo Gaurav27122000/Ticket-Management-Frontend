@@ -36,6 +36,7 @@ const CreateTicketModal = ({ isOpen, onClose, onCreate }) => {
       [name]: value,
     }));
   };
+  
 
   const handleCreate = async () => {
     try {

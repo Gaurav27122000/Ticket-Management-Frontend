@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Card, CardContent, Typography, Button, Menu, MenuItem, Box } from '@mui/material';
+import axios from 'axios';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const TicketCard = ({ ticket, onUpdateStatus }) => {
@@ -18,6 +19,28 @@ const TicketCard = ({ ticket, onUpdateStatus }) => {
     setStatus(newStatus);
     setAnchorEl(null);
     onUpdateStatus(ticket.id, newStatus);
+  };
+
+  const handleStatusChange = async (newStatus) => {
+    try {
+      await axios.put(
+        `https://ticket-management-fi6w.onrender.com/ticket/updateTicket/${ticket.id}`,
+        { status: newStatus },
+        {
+          headers: {
+            'accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
+          },
+        }
+      );
+      setStatus(newStatus);
+      onUpdateStatus(ticket.id, ticket.status, newStatus); // Update the parent component
+    } catch (error) {
+      console.error('Error updating ticket status:', error);
+    } finally {
+      handleClose();
+    }
   };
 
   return (
@@ -51,9 +74,9 @@ const TicketCard = ({ ticket, onUpdateStatus }) => {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <MenuItem onClick={() => handleMenuItemClick('Open')}>Open</MenuItem>
-            <MenuItem onClick={() => handleMenuItemClick('In Progress')}>In Progress</MenuItem>
-            <MenuItem onClick={() => handleMenuItemClick('Closed')}>Closed</MenuItem>
+            <MenuItem onClick={() => handleStatusChange('OPEN')}>Open</MenuItem>
+            <MenuItem onClick={() => handleStatusChange('UNASSIGNED')}>Unassigned</MenuItem>
+            <MenuItem onClick={() => handleStatusChange('CLOSED')}>Closed</MenuItem>
           </Menu>
         </Box>
       </CardContent>

@@ -16,10 +16,10 @@ const TicketsPage = ({token}) => {
   const [groupedTickets, setGroupedTickets] = useState({ open: [], unassigned: [], closed: [] });
 
   const handleCreateTicket = (newTicket) => { 
-    // setGroupedTickets((prevGroupedTickets) => ({
-    //   ...prevGroupedTickets,
-    //   [newTicket.status.toLowerCase()]: [...prevGroupedTickets[newTicket.status.toLowerCase()], newTicket],
-    // }));
+    setGroupedTickets((prevGroupedTickets) => ({
+      ...prevGroupedTickets,
+      [newTicket.status.toLowerCase()]: [...prevGroupedTickets[newTicket.status.toLowerCase()], {...newTicket,id:1000}],
+    }));
   };
 
   const handleOpenModal = () => {
@@ -68,12 +68,24 @@ const TicketsPage = ({token}) => {
   }, []);
 
 
-  const handleUpdateStatus = (ticketId, newStatus) => {
-    setTickets((prevTickets) =>
-      prevTickets.map((ticket) =>
-        ticket.id === ticketId ? { ...ticket, status: newStatus } : ticket
-      )
-    );
+  const handleUpdateStatus = (ticketId, oldStatus, newStatus) => {
+    setGroupedTickets(prevGroupedTickets => {
+      const updatedTickets = {
+        open: prevGroupedTickets.open.filter(ticket => ticket.id !== ticketId),
+        unassigned: prevGroupedTickets.unassigned.filter(ticket => ticket.id !== ticketId),
+        closed: prevGroupedTickets.closed.filter(ticket => ticket.id !== ticketId),
+      };
+      updatedTickets[newStatus.toLowerCase()] = [
+        ...updatedTickets[newStatus.toLowerCase()],
+        {
+          ...prevGroupedTickets[oldStatus.toLowerCase()].find(ticket => ticket.id === ticketId),
+          status: newStatus,
+        },
+      ];
+
+      return updatedTickets;
+    });
+
   }
 
   const handleDragEnd = (result) => {
