@@ -22,6 +22,19 @@ const TicketChatPage = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
 
+  const fetchMessages = async () => {
+    try {
+      const response = await axios.get(`https://ticket-management-fi6w.onrender.com/chat/getChats/${ticketId}`, {
+        headers: {
+          'accept': 'application/json',
+          'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
+        },
+      });
+      setMessages(response.data);
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+    }
+  };
   useEffect(() => {
     const fetchTicket = async () => {
       try {
@@ -37,19 +50,6 @@ const TicketChatPage = () => {
       }
     };
 
-    const fetchMessages = async () => {
-      try {
-        const response = await axios.get(`https://ticket-management-fi6w.onrender.com/chat/getChats/${ticketId}`, {
-          headers: {
-            'accept': 'application/json',
-            'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
-          },
-        });
-        setMessages(response.data);
-      } catch (error) {
-        console.error('Error fetching messages:', error);
-      }
-    };
 
     fetchTicket();
     fetchMessages();
@@ -57,8 +57,9 @@ const TicketChatPage = () => {
 
   const handleAddMessage = async () => {
     try {
-      const response = await axios.post(`https://ticket-management-fi6w.onrender.com/chat/addMessage/${ticketId}`, {
-        text: newMessage,
+      const response = await axios.post(`https://ticket-management-fi6w.onrender.com/chat/addMessage`, {
+        message: newMessage,
+        ticket_id: ticketId,
       }, {
         headers: {
           'accept': 'application/json',
@@ -66,7 +67,7 @@ const TicketChatPage = () => {
         },
       });
       // Assuming the API returns the updated list of messages
-      setMessages(response.data);
+      fetchMessages();
       setNewMessage(''); // Clear input after sending message
     } catch (error) {
       console.error('Error adding message:', error);
@@ -129,7 +130,7 @@ const TicketChatPage = () => {
           onChange={(e) => setNewMessage(e.target.value)}
           style={{ marginBottom: '1em' }}
         />
-        <IconButton color="primary" onClick={handleAddMessage}>
+        <IconButton color="primary" onClick={handleAddMessage} disabled={ticket.status==='CLOSED'}>
           <SendIcon />
         </IconButton>
         </Box>
