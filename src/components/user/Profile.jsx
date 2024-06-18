@@ -1,30 +1,45 @@
 import React from "react";
-import MetaData from "../layout/MetaData";
+import {jwtDecode} from 'jwt-decode';
 
 const Profile = () => {
+  const decodeToken = () => {
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+      return null;
+    }
+  
+    try {
+      return jwtDecode(token);
+    } catch (error) {
+      console.error('Failed to decode token:', error);
+      return null;
+    }
+  };
+  const user = decodeToken();
   return (
     <>
-      <MetaData http-equiv="Content-Security-Policy"  title={"My Profile"} />
       <div class="row justify-content-around mt-5 user-info">
         <div class="col-12 col-md-3">
           <figure class="avatar avatar-profile">
             <img
               class="rounded-circle img-fluid"
-              src="../images/default_avatar.jpg"
-              alt=""
+              src="../../../default_avatar.jpg"
             />
           </figure>
         </div>
 
         <div class="col-12 col-md-5">
+          <h4>Username</h4>
+          <p>{user.sub}</p>
+
           <h4>Full Name</h4>
-          <p>John Doe</p>
+          <p>{user.first_name} {user.last_name}</p>
 
           <h4>Email Address</h4>
-          <p>johndoe@example.com</p>
+          <p>{user.email}</p>
 
-          <h4>Joined On</h4>
-          <p>2023-09-19</p>
+          <h4>Role</h4>
+          <p>{user.role.toUpperCase()}</p>
         </div>
       </div>
     </>

@@ -5,6 +5,7 @@ import TicketsPage from './Ticket/TicketsPage';
 import './App.css';
 import RegisterPage from './Register/RegisterPage';
 import TicketChatPage from './TicketChat/TicketChatPage';
+import Profile from './components/user/Profile';
 
 const App = () => {
 
@@ -25,6 +26,7 @@ const App = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/tickets" element={<ProtectedRoute />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/chat/:ticketId" element={<TicketChatPage/>}/>
         </Routes>
       </div>

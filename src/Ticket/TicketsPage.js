@@ -104,12 +104,6 @@ const TicketsPage = ({token}) => {
     setTickets(updatedTickets);
   };
 
-  // const groupedTickets = {
-  //   open: tickets.filter(ticket => ticket.status === 'OPEN'),
-  //   unassigned: tickets.filter(ticket => ticket.status === 'UNASSIGNED'),
-  //   closed: tickets.filter(ticket => ticket.status === 'CLOSED'),
-  // };
-
   if (loading) return <CircularProgress />;
   if (error) return <Typography color="error">{error}</Typography>;
 
