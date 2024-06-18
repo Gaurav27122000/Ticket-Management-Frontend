@@ -91,7 +91,7 @@ const TicketChatPage = () => {
       </Box>
 
       {/* Right Side: Messages and Message Input */}
-      <Box style={{ flex: '1 1 ', padding: '1em' }}>
+      <Box style={{ flex: '1 1 ',maxHeight: '100vh', padding: '1em' }}>
         {/* Chat Messages */}
         <Typography variant="h5" gutterBottom>Chat Messages</Typography>
         
