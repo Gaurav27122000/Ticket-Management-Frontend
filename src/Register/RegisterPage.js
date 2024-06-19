@@ -36,7 +36,7 @@ const RegisterPage = () => {
       setMessage("Registration successful")
     } catch (error) {
       console.log("ERROR",error.response?.data?.detail);
-      setError(error.response.data.detail);
+      setError("Username is not available");
     }
   };
 
