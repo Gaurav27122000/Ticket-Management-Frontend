@@ -14,7 +14,7 @@ const LoginPage = () => {
   useEffect(() => {
     const pingBackend = async () => {
       try {
-        await axios.get('https://ticket-management-fi6w.onrender.com/ping'); // Replace with your backend's ping endpoint
+        await axios.get('https://ticket-management-fi6w.onrender.com/ping');
         console.log('Backend server is running');
       } catch (error) {
         console.error('Error pinging the backend:', error);

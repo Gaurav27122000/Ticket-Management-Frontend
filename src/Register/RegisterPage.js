@@ -10,12 +10,14 @@ const RegisterPage = () => {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('user');
+  const [message,setMessage] = useState('');
+  const [error,setError] = useState('');
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('https://ticket-management-fi6w.onrender.com/auth/', {
+      const response = await axios.post('http://127.0.0.1:8000/auth/', {
         username,
         email,
         first_name: firstName,
@@ -30,9 +32,11 @@ const RegisterPage = () => {
       });
 
       console.log('Registration successful', response.data);
-      navigate('/login');
+      setError('');
+      setMessage("Registration successful")
     } catch (error) {
-      console.error('Registration failed', error);
+      console.log("ERROR",error.response?.data?.detail);
+      setError(error.response.data.detail);
     }
   };
 
@@ -103,6 +107,8 @@ const RegisterPage = () => {
               </Select>
             </FormControl>
           </Box>
+          {message && <Typography color="success.main">{message}</Typography>}
+          {error && <Typography color="error">{error}</Typography>}
           <Box mt={3}>
             <Button fullWidth variant="contained" color="primary" type="submit">
               Register
@@ -110,6 +116,11 @@ const RegisterPage = () => {
           </Box>
         </form>
       </Box>
+      <Box mt={3}>
+      <Button variant="contained" color="primary" onClick={() => navigate('/login')} fullWidth>
+        Login
+      </Button>
+    </Box>
     </Container>
   );
 };
