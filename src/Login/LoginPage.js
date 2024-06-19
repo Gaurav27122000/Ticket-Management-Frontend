@@ -11,8 +11,17 @@ const LoginPage = () => {
   const [error, setError] = useState('');
   const [token, setToken] = useState(() => sessionStorage.getItem('token') || '');
 
-
   useEffect(() => {
+    const pingBackend = async () => {
+      try {
+        await axios.get('https://ticket-management-fi6w.onrender.com/ping'); // Replace with your backend's ping endpoint
+        console.log('Backend server is running');
+      } catch (error) {
+        console.error('Error pinging the backend:', error);
+      }
+    };
+
+    pingBackend();
     if (token) {
       navigate('/tickets');
     }
