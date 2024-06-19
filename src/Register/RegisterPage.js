@@ -17,7 +17,7 @@ const RegisterPage = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://127.0.0.1:8000/auth/', {
+      const response = await axios.post('https://ticket-management-fi6w.onrender.com/auth/', {
         username,
         email,
         first_name: firstName,
