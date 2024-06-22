@@ -15,11 +15,15 @@ const TicketsPage = ({token}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [groupedTickets, setGroupedTickets] = useState({ open: [], unassigned: [], closed: [], 'on hold':[] });
 
-  const handleCreateTicket = (newTicket) => { 
-    setGroupedTickets((prevGroupedTickets) => ({
-      ...prevGroupedTickets,
-      [newTicket.status.toLowerCase()]: [...prevGroupedTickets[newTicket.status.toLowerCase()], {...newTicket,id:1000}],
-    }));
+  const handleCreateTicket = (newTickets) => { 
+    const grouped = {
+      open: newTickets.filter(t => t.status === 'OPEN'),
+      unassigned: newTickets.filter(t => t.status === 'UNASSIGNED'),
+      closed: newTickets.filter(t => t.status === 'CLOSED'),
+      ['on hold']: newTickets.filter(t => t.status === 'ON HOLD'),
+    };
+    setGroupedTickets(grouped);
+    setTickets(newTickets);
   };
 
   const handleOpenModal = () => {

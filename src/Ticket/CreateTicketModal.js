@@ -62,7 +62,7 @@ const CreateTicketModal = ({ isOpen, onClose, onCreate }) => {
 
       // Close the modal and reset form data
       onClose();
-      onCreate(formData);
+      onCreate(response.data);
       setFormData(initialFormData);
 
       // Call the parent onCreate function to update tickets list
